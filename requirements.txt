@@ -1,0 +1,24 @@
+#conda create -n vdm-cpu2 python=3.10 -y
+#pip install -r requirements.txt
+
+
+
+numpy>=1.21
+tqdm>=4.64
+matplotlib>=3.4
+scikit-learn>=1.0
+scikit-image>=0.19
+
+torch>=1.12
+torchvision>=0.13
+pytorch-lightning>=1.7
+
+einops>=0.4
+wandb>=0.12
+
+ipython
+ipykernel
+ipdb
+
+seaborn
+pandas
