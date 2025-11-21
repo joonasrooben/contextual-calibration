@@ -72,13 +72,14 @@ def train_sae(
     dup_cos_thresh: float = 0.9,  # report pairs with cosine > this
     device: str = "cuda" if torch.cuda.is_available() else "cpu",
     verbose_every: int = 10,
+    weight_decay = 1e-5 
 ) -> None:
     """Optimise reconstruction + L1 sparsity (+ optional decoder incoherence)."""
     sae.to(device)
     dataset = TensorDataset(latent_tensor)
     loader = DataLoader(dataset, batch_size=batch_size, shuffle=True, drop_last=False)
     criterion = nn.MSELoss(reduction="mean")
-    optimiser = optim.Adam(sae.parameters(), lr=lr)
+    optimiser = optim.Adam(sae.parameters(), lr=lr,weight_decay = weight_decay)
 
     # locate decoder weights (for cosine penalty & duplicate metrics)
     decW = _get_decoder_weight(sae)
@@ -106,7 +107,8 @@ def train_sae(
             # core losses
             recon_loss = criterion(recon, batch)
             l1_term = z.abs().mean()
-            loss = recon_loss + l1_lambda * l1_term
+
+            loss = recon_loss + l1_lambda * l1_term 
 
             # optional decoder cosine penalty (anti-duplicate)
             if w_cos > 0.0 and decW is not None:
