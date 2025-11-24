@@ -8,7 +8,7 @@ class UnitNormDecoder(nn.Linear):
     def forward(self, x):
         with torch.no_grad():
             W = self.weight
-            W /= W.norm(dim=0, keepdim=True).clamp_min(1e-8)
+            W.div(W.norm(dim=0, keepdim=True).clamp_min(1e-8))
         return super().forward(x)
 
 class SparseAutoencoder(nn.Module):
@@ -27,7 +27,7 @@ class SparseAutoencoder(nn.Module):
     ) -> None:
         super().__init__()
         self.encoder = nn.Linear(input_dim, code_dim, bias=True)
-        self.decoder = nn.UnitNormDecoder(code_dim, input_dim, bias=True)
+        self.decoder = UnitNormDecoder(code_dim, input_dim, bias=True)
         self.activation = activation
         self.use_circuits_implementation = use_circuits_implementation
         if tied_weights:
