@@ -71,7 +71,7 @@ def train_sae(
     dead_thresh: float = 1e-3,    # unit considered "dead" if active fraction < dead_thresh per epoch
     dup_cos_thresh: float = 0.9,  # report pairs with cosine > this
     device: str = "cuda" if torch.cuda.is_available() else "cpu",
-    verbose_every: int = 10,
+    verbose_every: int = 10, 
 ) -> None:
     """Optimise reconstruction + L1 sparsity (+ optional decoder incoherence)."""
     sae.to(device)
@@ -106,7 +106,8 @@ def train_sae(
             # core losses
             recon_loss = criterion(recon, batch)
             l1_term = z.abs().mean()
-            loss = recon_loss + l1_lambda * l1_term
+
+            loss = recon_loss + l1_lambda * l1_term 
 
             # optional decoder cosine penalty (anti-duplicate)
             if w_cos > 0.0 and decW is not None:
@@ -615,7 +616,7 @@ def plot_top_k_images(
         try:
             img = data[p]
             axes[r][c].imshow(img)
-            axes[r][c].set_title( str(np.round(top_act[idx],3)), fontsize=8)
+            axes[r][c].set_title( str(np.round(top_act[idx],5)), fontsize=8)
             axes[r][c].axis("off")
         except Exception as e:
             axes[r][c].text(0.5, 0.5, f"Error:\n{e}", ha="center", va="center")
